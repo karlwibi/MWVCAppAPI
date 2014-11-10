@@ -46,7 +46,11 @@ public class RoomResource {
      * @return an instance of java.lang.String
      */
     
-
+    /**
+     * Retrieves representation of an instance of edu.ilstu.API.RoomResource
+     * @param roomId
+     * @return an instance of java.lang.String
+     */
     @GET
     @Produces("application/json")
     public String getRoomInfo(@PathParam("roomId") int roomId) {
@@ -77,13 +81,14 @@ public class RoomResource {
         StudentModel studentModel = new StudentModel();
         ScheduleClassModel scheduleClassModel = new ScheduleClassModel();
 
-        ArrayList<RoomParticipantModel> listOfParticipant = new ArrayList<>();
+        ArrayList<RoomParticipantModel> listOfParticipant = null;
 
         ocm.setRoomid(roomid);
         ocm = ocm.getClassByRoomId();
         scheduleClassModel.setOnlineClassId(ocm.getOnlineClassId());
         scheduleClassModel=scheduleClassModel.getScheduleByOnlineClassID();
-//        teacherModel=teacherModel.getTeacherById(scheduleClassModel.getTeacherId());
+        System.out.println(scheduleClassModel.ToJSONString());
+        teacherModel=teacherModel.getTeacherById(ocm.getTeacherId());
         //scm.setOnlineClassId(ocm.getOnlineClassId());
         rpm.setOnlineClassId(ocm.getOnlineClassId());
 

@@ -110,11 +110,11 @@ public class ScheduleClassDAOImpl implements ScheduleClassDAO, Serializable {
     @Override
     public ScheduleClassModel findScheduleByOnlineClassId(int onlineClassId) {
         int i = 1;
-        int identity = 0;
+        
         ResultSet rs = null;
         Connection con = ConnectionDB.getConnInst();
         ScheduleClassModel scm = new ScheduleClassModel();
-        ArrayList<ScheduleClassModel> scheduleClassModels = new ArrayList<ScheduleClassModel>();
+        
 
         try {
 

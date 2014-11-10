@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -261,7 +262,23 @@ public class ScheduleClassModel implements Serializable {
         setEndTime(new java.sql.Time(new java.sql.Date(this.end_Time.getTime()).getTime()));
     }
     
-    
+    public String ToJSONString() {
+
+        JSONObject obj = new JSONObject();
+        obj.put("scheduleClassId", this.scheduleClassId);
+        obj.put("onlineClassId", this.onlineClassId);
+        obj.put("startDate", this.startDate);
+        obj.put("endDate", this.endDate);
+        obj.put("startTime", this.startDate);
+        obj.put("endTime", this.endDate);
+        obj.put("start_Date", this.start_Date);
+        obj.put("end_Date", this.end_Date);
+        obj.put("start_Time", this.start_Time);
+        obj.put("end_Time", this.end_Time);
+       
+
+        return obj.toJSONString();
+    }
     
     
 }

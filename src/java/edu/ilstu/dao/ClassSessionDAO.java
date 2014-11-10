@@ -7,6 +7,7 @@
 package edu.ilstu.dao;
 
 import edu.ilstu.model.ClassSessionModel;
+import java.sql.Date;
 import java.util.ArrayList;
 
 /**
@@ -23,6 +24,8 @@ public interface ClassSessionDAO {
     public void deleteSession(ClassSessionModel session);
     
     public ClassSessionModel getASession(int sessionId);
+    
+    public ArrayList<ClassSessionModel> findClassSessionByDate(Date date);
     
     public ArrayList<ClassSessionModel> getSessionsByScheduleId(int scheduleId);
     

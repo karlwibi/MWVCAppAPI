@@ -22,12 +22,11 @@ public class OnlineClassModel implements Serializable {
     private String title;
     private String description;
     private int roomid;
-    private OnlineClassDAO ocdao;
     private int teacherId;
     
     public OnlineClassModel() {
         Random rn = new Random();
-        ocdao=new OnlineClassDAOImpl();
+        
         this.roomid = (rn.nextInt(9999 - 1000)) + 1000;
     }
 
@@ -104,34 +103,34 @@ public class OnlineClassModel implements Serializable {
 
     
     public int saveClass(){
-        
-        return getOcdao().createOnlineClass(this);
+        OnlineClassDAO ocdao=new OnlineClassDAOImpl();
+        return ocdao.createOnlineClass(this);
     }
     
     
     public void updateClass(){
-        
-        getOcdao().updateOnlineClass(this);
+        OnlineClassDAO ocdao=new OnlineClassDAOImpl();
+        ocdao.updateOnlineClass(this);
         
     }
     
     public void deleteClass(){
-        
-        getOcdao().deleteOnlineClass(this);
+        OnlineClassDAO ocdao=new OnlineClassDAOImpl();
+        ocdao.deleteOnlineClass(this);
     }
     
     
     public ArrayList<OnlineClassModel> getClasses(){
-        
-        ArrayList<OnlineClassModel> list= getOcdao().getOnliceClasses();
+        OnlineClassDAO ocdao=new OnlineClassDAOImpl();
+        ArrayList<OnlineClassModel> list= ocdao.getOnliceClasses();
         
         return list;
     }
     
     
     public ArrayList<OnlineClassModel> getClassesByTeacherID(){
-        
-        ArrayList<OnlineClassModel> list= getOcdao().getOnliceClassesByTeacherId(this.getTeacherId());
+        OnlineClassDAO ocdao=new OnlineClassDAOImpl();
+        ArrayList<OnlineClassModel> list= ocdao.getOnliceClassesByTeacherId(this.getTeacherId());
         
         return list;
     }
@@ -140,8 +139,8 @@ public class OnlineClassModel implements Serializable {
      * @return an object of type OnlineClassModel
      */
     public OnlineClassModel getAClass(){
-        
-        OnlineClassModel ocm = getOcdao().getfindOnlineClassById(this.onlineClassId);
+        OnlineClassDAO ocdao=new OnlineClassDAOImpl();
+        OnlineClassModel ocm = ocdao.getfindOnlineClassById(this.onlineClassId);
         
         return ocm;
     }
@@ -150,8 +149,8 @@ public class OnlineClassModel implements Serializable {
      * @return an object of type OnlineClassModel
      */
     public OnlineClassModel getClassByRoomId(){
-        
-        OnlineClassModel ocm = getOcdao().findByRoomId(roomid);
+         OnlineClassDAO ocdao=new OnlineClassDAOImpl();
+        OnlineClassModel ocm = ocdao.findByRoomId(roomid);
         
         return ocm;
     }
@@ -175,20 +174,7 @@ public class OnlineClassModel implements Serializable {
         return obj.toJSONString();
     }
 
-    /**
-     * @return the ocdao
-     */
-    public OnlineClassDAO getOcdao() {
-        return ocdao;
-    }
-
-    /**
-     * @param ocdao the ocdao to set
-     */
-    public void setOcdao(OnlineClassDAO ocdao) {
-        this.ocdao = ocdao;
-    }
-
+    
     /**
      * @return the teacherId
      */
