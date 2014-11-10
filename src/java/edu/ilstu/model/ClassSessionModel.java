@@ -156,6 +156,14 @@ public class ClassSessionModel {
         return csdao.getAllSessions();
     }
     
+    public ArrayList<ClassSessionModel> findClassSessionByDate(Date date){
+        
+        ClassSessionDAO csdao = new ClassSessionDAOImpl();
+                      
+        return csdao.findClassSessionByDate(date);
+        
+    }
+    
      public String classSessionToJSONString() {
 
         JSONObject obj = new JSONObject();

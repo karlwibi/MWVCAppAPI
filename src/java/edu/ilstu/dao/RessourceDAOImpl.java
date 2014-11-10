@@ -86,7 +86,14 @@ public abstract class RessourceDAOImpl implements RessourceDAO {
 
     }
 
-    
+   /**
+    * this method check to see what type of resource is the presentation
+    * 
+    * @param resourceID
+    * @return 
+    *         Prezi - if the type is related to a prezi id
+    *         Slide - if the type is related to a reveal resource
+    */ 
     public static String checkResourceType(int resourceID){
         
         String returnValue=null;
