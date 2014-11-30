@@ -11,6 +11,8 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 import org.json.simple.JSONObject;
 
 /**
@@ -29,6 +31,7 @@ public class ScheduleClassModel implements Serializable {
     private java.util.Date end_Date;
     private java.util.Date start_Time;
     private java.util.Date end_Time;
+    private String tzname;
     //private ScheduleClassDAO scdao;
 
     public ScheduleClassModel() {
@@ -47,8 +50,17 @@ public class ScheduleClassModel implements Serializable {
 
     }
 
-    public ScheduleClassModel(int scheduleClassId, int onlineClassId, Date startDate, Date endDate, Time startTime, Time endTime) {
+    
+     public ScheduleClassModel(int onlineClassId, Date startDate, Date endDate, Time startTime, Time endTime) {
         this(onlineClassId, startDate, endDate);
+        this.startTime = startTime;
+        this.endTime = endTime;
+       
+
+    }
+    
+    public ScheduleClassModel(int scheduleClassId, int onlineClassId, Date startDate, Date endDate, Time startTime, Time endTime) {
+        this(onlineClassId, startDate, endDate, startTime, endTime);
         this.startTime = startTime;
         this.endTime = endTime;
         this.scheduleClassId = scheduleClassId;
@@ -199,6 +211,7 @@ public class ScheduleClassModel implements Serializable {
     }
     
     /**
+     * Use java util date
      * @return the start_Date
      */
     public java.util.Date getStart_Date() {
@@ -206,6 +219,7 @@ public class ScheduleClassModel implements Serializable {
     }
 
     /**
+     * Use java util date
      * @param start_Date the start_Date to set
      */
     public void setStart_Date(java.util.Date start_Date) {
@@ -215,6 +229,7 @@ public class ScheduleClassModel implements Serializable {
     }
 
     /**
+     * Use java util date
      * @return the end_Date
      */
     public java.util.Date getEnd_Date() {
@@ -222,6 +237,7 @@ public class ScheduleClassModel implements Serializable {
     }
 
     /**
+     * Use java util date
      * @param end_Date the end_Date to set
      */
     public void setEnd_Date(java.util.Date end_Date) {
@@ -231,6 +247,7 @@ public class ScheduleClassModel implements Serializable {
     }
 
     /**
+     * Use java util date
      * @return the start_Time
      */
     public java.util.Date getStart_Time() {
@@ -238,15 +255,17 @@ public class ScheduleClassModel implements Serializable {
     }
 
     /**
+     * Use java util date
      * @param start_Time the start_Time to set
      */
     public void setStart_Time(java.util.Date start_Time) {
         this.start_Time = start_Time;
-        if (this.startTime!=null)
+        if (this.start_Time!=null)
        setStartTime(new java.sql.Time(new java.sql.Date( this.start_Time.getTime()).getTime()));
     }
 
     /**
+     * Use java util date
      * @return the end_Time
      */
     public java.util.Date getEnd_Time() {
@@ -254,6 +273,7 @@ public class ScheduleClassModel implements Serializable {
     }
 
     /**
+     * Use java util date
      * @param end_Time the end_Time to set
      */
     public void setEnd_Time(java.util.Date end_Time) {
@@ -261,6 +281,54 @@ public class ScheduleClassModel implements Serializable {
           if (this.end_Time!=null)
         setEndTime(new java.sql.Time(new java.sql.Date(this.end_Time.getTime()).getTime()));
     }
+
+    /**
+     * @return the tzname
+     */
+    public String getTzname() {
+        return tzname;
+    }
+
+    /**
+     * @param tzname the tzname to set
+     */
+    public void setTzname(String tzname) {
+        this.tzname = tzname;
+    }
+    
+    
+     public static java.util.Date utcToTimeZonecheck(java.util.Date serverUtcTime, String timeZone) {
+
+        // Construct FROM and TO TimeZone instances
+        TimeZone fromTimeZone = TimeZone.getTimeZone("UTC");
+        TimeZone toTimeZone = TimeZone.getTimeZone(timeZone);
+
+// Get a Calendar instance using the default time zone and locale.
+        Calendar calendar = Calendar.getInstance();
+ // Set the calendar's time with the given date
+        calendar.setTimeZone(fromTimeZone);
+        calendar.setTime(serverUtcTime);
+
+        System.out.println("Input: " + calendar.getTime() + " in " + fromTimeZone.getDisplayName());
+
+        // FROM TimeZone to UTC
+        calendar.add(Calendar.MILLISECOND, fromTimeZone.getRawOffset() * -1);
+
+        if (fromTimeZone.inDaylightTime(calendar.getTime())) {
+            calendar.add(Calendar.MILLISECOND, calendar.getTimeZone().getDSTSavings() * -1);
+        }
+
+// UTC to TO TimeZone
+        calendar.add(Calendar.MILLISECOND, toTimeZone.getRawOffset());
+
+        if (toTimeZone.inDaylightTime(calendar.getTime())) {
+            calendar.add(Calendar.MILLISECOND, toTimeZone.getDSTSavings());
+        }
+
+        return calendar.getTime();
+
+    }
+
     
     public String ToJSONString() {
 
@@ -279,6 +347,7 @@ public class ScheduleClassModel implements Serializable {
 
         return obj.toJSONString();
     }
-    
+	
+	
     
 }

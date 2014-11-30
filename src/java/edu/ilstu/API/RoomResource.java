@@ -16,6 +16,7 @@ import edu.ilstu.model.RoomParticipantModel;
 import edu.ilstu.model.ScheduleClassModel;
 import edu.ilstu.model.SessionResourceModel;
 import edu.ilstu.model.StudentModel;
+import edu.ilstu.model.StudyToolModel;
 import edu.ilstu.model.TeacherModel;
 import java.io.File;
 import java.text.DateFormat;
@@ -86,6 +87,7 @@ public class RoomResource {
     private String buildInfo(int roomid) {
 
         OnlineClassModel ocm = new OnlineClassModel();
+        String presentationType = null;
         //ScheduleClassModel scm=new ScheduleClassModel();
         RoomParticipantModel rpm = new RoomParticipantModel();
         ClassSessionModel sessionModel = new ClassSessionModel();
@@ -95,6 +97,7 @@ public class RoomResource {
         JSONObject obj = new JSONObject();
         JSONArray jlist = new JSONArray();
         JSONArray jSlideList = new JSONArray();
+        JSONArray jStudyList = new JSONArray();
         TeacherModel teacherModel = new TeacherModel();
         StudentModel studentModel = new StudentModel();
         ScheduleClassModel scheduleClassModel = new ScheduleClassModel();
@@ -129,11 +132,13 @@ public class RoomResource {
             //checking the presentation Id
             if (RessourceDAOImpl.checkResourceType(sessionModel.getPresentationId()).equals("Prezi")) {
 
+                presentationType = "prezi";
                 preziResource = new PreziContentModel(sessionModel.getPresentationId());
                 preziResource = preziResource.findPreziRessourceById();
 
             } else {
 
+                presentationType = "slide";
                 revealResource = new RevealContentModel(sessionModel.getPresentationId());
                 revealResource = revealResource.findRevealRessourceById();
 
@@ -142,6 +147,12 @@ public class RoomResource {
                 listContent = slideContent.findContentByRevealID();
 
             }
+
+            //getting the study resource 
+            SessionResourceModel srm = new SessionResourceModel();
+            srm.setSessionId(sessionModel.getSessionId());
+            listSessionRessource = srm.getSessionRessoureForASession();
+
         }
 
         if (revealResource != null && listContent != null) {
@@ -169,26 +180,43 @@ public class RoomResource {
         listOfParticipant = rpm.getAllParticipantForRoom();
 
         //getting the roomparticipant and create the jason array
-        for (RoomParticipantModel Participant : listOfParticipant) {
-            studentModel = studentModel.getStudentById(Participant.getStudentId());
-            jlist.add(studentModel.studentToJSONString());
+        if (listOfParticipant != null) {
+            for (RoomParticipantModel Participant : listOfParticipant) {
+                studentModel = studentModel.getStudentById(Participant.getStudentId());
+                jlist.add(studentModel.studentToJSONString());
+            }
+        }
+
+        if (listSessionRessource != null) {
+            for (SessionResourceModel srm : listSessionRessource) {
+                StudyToolModel stm = new StudyToolModel(srm.getResourceId());
+                stm = stm.findStudyToolById();
+                jStudyList.add(stm.getArticleLink());
+            }
         }
 
         obj.put("onlineClassid", ocm.getOnlineClassId());
         obj.put("sessionId", sessionModel.getSessionId());
         obj.put("roomParticipants", jlist);
         obj.put("teacherInfo", teacherModel.teacherToJSONString());
+        obj.put("presentationType", presentationType);
 
         if (preziResource != null) {
             obj.put("preziResource", preziResource.PreziToJSONString());
         } else {
-            obj.put("PreziResource", "");
+            obj.put("preziResource", null);
         }
 
         if (revealResource != null) {
             obj.put("revealSlide", jSlideList);
         } else {
-            obj.put("revealSlide", "");
+            obj.put("revealSlide", null);
+        }
+
+        if (listSessionRessource != null) {
+            obj.put("studyTool", null);
+        } else {
+            obj.put("studyTool", jStudyList);
         }
         //obj.put(, obj)
 

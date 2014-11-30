@@ -29,8 +29,8 @@ public class ScheduleClassDAOImpl implements ScheduleClassDAO, Serializable {
         try {
 
             PreparedStatement p = con.prepareStatement("INSERT INTO scheduleclass"
-                    + "(onlineclassid,startdate,enddate,starttime, endtime)"
-                    + "values(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+                    + "(onlineclassid,startdate,enddate,starttime, endtime, tzname)"
+                    + "values(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
            
             p.setInt(i++, scheduleClass.getOnlineClassId());
@@ -38,6 +38,7 @@ public class ScheduleClassDAOImpl implements ScheduleClassDAO, Serializable {
             p.setDate(i++, scheduleClass.getEndDate());
             p.setTime(i++, scheduleClass.getStartTime());
             p.setTime(i++, scheduleClass.getEndTime());
+            p.setString(i++, scheduleClass.getTzname());
 
             p.executeUpdate();
 
@@ -87,6 +88,7 @@ public class ScheduleClassDAOImpl implements ScheduleClassDAO, Serializable {
                 scm.setEndDate(rs.getDate(j++));
                 scm.setStartTime(rs.getTime(j++));
                 scm.setEndTime(rs.getTime(j++));
+                scm.setTzname(rs.getString(j++));
 
                 scheduleClassModels.add(scm);
             }
@@ -110,11 +112,11 @@ public class ScheduleClassDAOImpl implements ScheduleClassDAO, Serializable {
     @Override
     public ScheduleClassModel findScheduleByOnlineClassId(int onlineClassId) {
         int i = 1;
-        
+        int identity = 0;
         ResultSet rs = null;
         Connection con = ConnectionDB.getConnInst();
         ScheduleClassModel scm = new ScheduleClassModel();
-        
+        ArrayList<ScheduleClassModel> scheduleClassModels = new ArrayList<ScheduleClassModel>();
 
         try {
 
@@ -133,6 +135,7 @@ public class ScheduleClassDAOImpl implements ScheduleClassDAO, Serializable {
                 scm.setEndDate(rs.getDate(j++));
                 scm.setStartTime(rs.getTime(j++));
                 scm.setEndTime(rs.getTime(j++));
+                scm.setTzname(rs.getString(j++));
 
                 
             }
@@ -163,11 +166,12 @@ public class ScheduleClassDAOImpl implements ScheduleClassDAO, Serializable {
 
         try {
 
-            PreparedStatement p = con.prepareStatement("UPDATE scheduleclass"
-                    + "set startdate=?,"
+            PreparedStatement p = con.prepareStatement("UPDATE scheduleclass "
+                    + "SET startdate=?,"
                     + "enddate=?,"
                     + "starttime=?,"
-                    + "endtime=? "
+                    + "endtime=?, "
+                    + "tzname=? "
                     + "WHERE scheduleclassid=?");
 
             p.setDate(i++, scheduleClass.getStartDate());
@@ -175,7 +179,9 @@ public class ScheduleClassDAOImpl implements ScheduleClassDAO, Serializable {
             p.setTime(i++, scheduleClass.getStartTime());
             p.setTime(i++, scheduleClass.getEndTime());
             p.setInt(i++, scheduleClass.getScheduleClassId());
+            p.setString(i++, scheduleClass.getTzname());
 
+            System.out.println(p.toString());
             p.executeUpdate();
 
         } catch (SQLException e) {
@@ -247,6 +253,7 @@ public class ScheduleClassDAOImpl implements ScheduleClassDAO, Serializable {
                 scm.setEndDate(rs.getDate(j++));
                 scm.setStartTime(rs.getTime(j++));
                 scm.setEndTime(rs.getTime(j++));
+                scm.setTzname(rs.getString(j++));
 
             }
 
@@ -289,6 +296,7 @@ public class ScheduleClassDAOImpl implements ScheduleClassDAO, Serializable {
                 scm.setEndDate(rs.getDate(j++));
                 scm.setStartTime(rs.getTime(j++));
                 scm.setEndTime(rs.getTime(j++));
+                scm.setTzname(rs.getString(j++));
 
                 scheduleClassModels.add(scm);
             }
@@ -335,6 +343,7 @@ public class ScheduleClassDAOImpl implements ScheduleClassDAO, Serializable {
                 scm.setEndDate(rs.getDate(j++));
                 scm.setStartTime(rs.getTime(j++));
                 scm.setEndTime(rs.getTime(j++));
+                scm.setTzname(rs.getString(j++));
 
                 
             }

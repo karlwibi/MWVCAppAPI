@@ -100,7 +100,7 @@ public class PreziContentModel extends RessourceModel implements Serializable {
      public String PreziToJSONString() {
 
         JSONObject obj = new JSONObject();
-        obj.put("dateCreated", super.getDateCreated());
+        obj.put("dateCreated", super.getDateCreated().toString());
         obj.put("onlineClassId", super.getOnlineClassId());
         obj.put("resourceId", super.getRessourceId());
         obj.put("teacherId", super.getTeacherId());

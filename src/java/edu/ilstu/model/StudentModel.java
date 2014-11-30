@@ -89,7 +89,7 @@ public class StudentModel extends UserModel implements Serializable{
         obj.put("city", super.getCity());
         obj.put("state", super.getState());
         obj.put("zipcode", super.getZipCode());
-        obj.put("country", super.getUserid());
+        obj.put("country", super.getCountry());
         obj.put("type",String.valueOf(super.getIs_a()));
 
         return obj.toJSONString();
